@@ -5,7 +5,7 @@
 //   those colors across the triangles.
 //
 
-#include "Angel/Angel.h"
+#include "../Angel/Angel.h"
 
 #include <iostream>
 
@@ -117,7 +117,7 @@ init()
     glBufferSubData( GL_ARRAY_BUFFER, sizeof(points), sizeof(colors), colors );
 
     // Load shaders and use the resulting shader program
-    GLuint program = InitShader( "glsl/vshader41.glsl", "glsl/fshader41.glsl" );
+    GLuint program = InitShader( "../glsl/vshader41.glsl", "../glsl/fshader41.glsl" );
     glUseProgram( program );
 
     // set up vertex arrays
