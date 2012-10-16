@@ -1,4 +1,7 @@
 opengl
 ======
 
-OpenGL projects
+various OpenGL projects and examples.
+
+* stuff
+* more stuff
