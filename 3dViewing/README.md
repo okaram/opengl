@@ -1,8 +1,7 @@
 opengl
 ======
 
-various OpenGL projects and examples.
+examples for simple 3d viewing; uses Angel's header file.
 
-* [a1](opengl/a1/) - my solution to assignment 1
-* [3dViewing](opengl/3dViewing/) - some examples for 3d viewing using Ed Angel's code
-* [Angel](opengl/Angel/) - my version of Angel's matrix and vector code
+* cube.cpp - a modification of Angel's example1.cpp (we did this in class a million times :)
+* cubeWithVectors.cpp - modifying cube.cpp to use c++ vectors instead of arrays, displays two cubes instead of one.
