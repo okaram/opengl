@@ -3,9 +3,11 @@
 
 #include "../Angel/Angel.h"
 
+#include <png++/png.hpp>
+
 const int  NumTriangles = 12; // (6 faces)(2 triangles/face)
 const int  NumVertices  = 3 * NumTriangles;
-const int  TextureSize  = 64;
+const int  TextureSize  = 600;
 
 typedef Angel::vec4 point4;
 typedef Angel::vec4 color4;
@@ -15,6 +17,8 @@ GLuint textures[2];
 
 GLubyte image[TextureSize][TextureSize][3];
 GLubyte image2[TextureSize][TextureSize][3];
+
+
 
 // Vertex data arrays
 point4  points[NumVertices];
@@ -107,13 +111,15 @@ init()
 {
     colorcube();
 
+	png::image<png::rgb_pixel > img1("pnggrad16rgb.png");
     // Create a checkerboard pattern
-    for ( int i = 0; i < 64; i++ ) {
-        for ( int j = 0; j < 64; j++ ) {
-            GLubyte c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0)) * 255;
-            image[i][j][0]  = c;
-            image[i][j][1]  = c;
-            image[i][j][2]  = c;
+    for ( int i = 0; i < TextureSize; i++ ) {
+        for ( int j = 0; j < TextureSize; j++ ) {
+			GLubyte c= ((i%2) ^ (j%2))*255;
+            //GLubyte c = (((i & 0x8) == 0) ^ ((j & 0x8)  == 0)) * 255;
+            image[i][j][0]  = img1[i][j].red;
+            image[i][j][1]  = img1[i][j].green;
+            image[i][j][2]  = img1[i][j].blue;
             image2[i][j][0] = c;
             image2[i][j][1] = 0;
             image2[i][j][2] = c;
@@ -235,7 +241,7 @@ mouse( int button, int state, int x, int y )
 void
 idle( void )
 {
-    Theta[Axis] += 0.01;
+    Theta[Axis] += 0.1;
 
     if ( Theta[Axis] > 360.0 ) {
 	Theta[Axis] -= 360.0;

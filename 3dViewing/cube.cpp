@@ -161,7 +161,10 @@ display( void )
     glUniformMatrix4fv( projection, 1, GL_TRUE, p );
 
     glDrawArrays( GL_TRIANGLES, 0, NumVertices );
-
+	mv=mv*Translate(.3,.2,0);
+    glUniformMatrix4fv( model_view, 1, GL_TRUE, mv );
+    glDrawArrays( GL_TRIANGLES, 0, NumVertices );
+	
     glutSwapBuffers();
 }
 
