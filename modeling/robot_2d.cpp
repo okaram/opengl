@@ -129,7 +129,7 @@ init()
     glBufferSubData( GL_ARRAY_BUFFER, sizeof(point4)*points.size(), sizeof(color4)*colors.size(), &colors[0] );
 
     // Load shaders and use the resulting shader program
-    GLuint program = InitShader( "../glsl/v_model_view_projection.glsl", "../glsl/fshader41.glsl" );
+    GLuint program = InitShader( "../glsl/v_model_view_projection_2d.glsl", "../glsl/fshader41.glsl" );
     glUseProgram( program );
 
     // set up vertex arrays

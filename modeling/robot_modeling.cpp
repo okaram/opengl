@@ -35,7 +35,7 @@ point4 vertices[8] = {
     point4(  0.5, -0.5, -0.5,	1.0)
 };
 
-// RGBA olors
+// RGBA colors
 color4 vertex_colors[8] = {
     color4( 0.0, 0.0, 0.0, 1.0 ),  // black
     color4( 1.0, 0.0, 0.0, 1.0 ),  // red
@@ -161,10 +161,14 @@ void draw_cube(mat4 model_m)
 
 void draw_arm(mat4 model_m)
 {
-	mat4 arm_m=model_m*Scale(2,0.25,02.5);
+	cout << "da model_m" << model_m;
+	mat4 arm_m=model_m*Scale(2,0.25,0.25);
+	cout << endl <<"da arm_m (scaled)" << arm_m;
+	
 	draw_cube(arm_m);
-	arm_m=RotateZ(60.0)*arm_m;
 	arm_m=Translate(-1.3,-0.9,0)*arm_m;
+	arm_m=RotateZ(60.0)*arm_m;
+	cout << endl << "da arm_m (rot-trans)" << arm_m;
 	draw_cube(arm_m);
 }
 
@@ -186,7 +190,25 @@ void draw_robot(mat4 model_m)
 	draw_arm(arm_m);
 }
 
+void draw_star(mat4 model_m)
+{
+	
+	model_m *=Scale(0.5,1,1);
+	model_m *=Translate(1,0,0);
+	draw_cube(model_m);
+	model_m *=RotateZ(30);
+	draw_cube(model_m);
+	model_m *=RotateZ(30);
+	draw_cube(model_m);
+}
 
+void draw_rect(mat4 model_m)
+{
+	model_m*=Scale(2,0.5,1);
+	draw_cube(model_m);
+}
+
+float rot_y=0;
 void
 display( void )
 {
@@ -203,6 +225,7 @@ display( void )
 
     mat4  view_m = LookAt( eye, at, up );
     glUniformMatrix4fv( view,  1, GL_TRUE, view_m);
+    cout << view_m << endl;
 /*
     mat4 model_m; // identity
     model_m*=Translate(1,-1,0);
@@ -210,7 +233,22 @@ display( void )
 */
 	//draw_robot(mat4());
 	//draw_robot(RotateZ(50));
-	draw_arm(mat4());
+
+//	draw_cube(mat4());
+	mat4 m;
+	m*=RotateY(rot_y);
+	m*=Translate(-1,0.5,0);
+	m*=Scale(0.2,0.2,1);
+	m*=Translate(-.5,.5,0);
+	draw_rect(m);
+	m*=Translate(-1,-1,0);
+	m*=RotateZ(90);
+	draw_rect(m);
+	
+	//model_m*=RotateZ(45);
+	//draw_cube(m);
+
+//	draw_star(model_m);
     glutSwapBuffers();
 }
 
@@ -227,8 +265,13 @@ keyboard( unsigned char key, int x, int y )
 
 	case 'x': the_left *= 1.1; the_right *= 1.1; break;
 	case 'X': the_left *= 0.9; the_right *= 0.9; break;
+/*	
 	case 'y': bottom *= 1.1; top *= 1.1; break;
 	case 'Y': bottom *= 0.9; top *= 0.9; break;
+	* 
+*/	
+	case 'y': rot_y+=10; break;
+	case 'Y': rot_y-=10; break;
 	case 'z': zNear  *= 1.1; zFar *= 1.1; break;
 	case 'Z': zNear *= 0.9; zFar *= 0.9; break;
 	case 'r': radius *= 2.0; break;
