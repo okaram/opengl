@@ -1,11 +1,11 @@
 #version 120 
 
-attribute  vec3 vPosition;
-attribute  vec4 vColor;
+attribute  vec2 vPosition;
+attribute  vec2 vColor;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat3 model;
+uniform mat3 view;
+uniform mat3 projection;
 
 void main() 
 {

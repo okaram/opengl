@@ -1,0 +1,6 @@
+README
+lib/smartypants.py
+pip-egg-info/smartypants.egg-info/PKG-INFO
+pip-egg-info/smartypants.egg-info/SOURCES.txt
+pip-egg-info/smartypants.egg-info/dependency_links.txt
+pip-egg-info/smartypants.egg-info/top_level.txt

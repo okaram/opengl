@@ -1,0 +1,15 @@
+LICENSE
+MANIFEST.in
+README.markdown
+commando.py
+distribute_setup.py
+requirements.txt
+setup.cfg
+setup.py
+pip-egg-info/commando.egg-info/PKG-INFO
+pip-egg-info/commando.egg-info/SOURCES.txt
+pip-egg-info/commando.egg-info/dependency_links.txt
+pip-egg-info/commando.egg-info/requires.txt
+pip-egg-info/commando.egg-info/top_level.txt
+tests/dev-req.txt
+tests/test_commando.py
