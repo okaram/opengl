@@ -5,63 +5,54 @@
 using namespace std;
 typedef Angel::vec3  point;
 
-vector<point> points { {0,0.5,-0.5}, {-0.5,-0.5,0}, {0.5,-0.5,0}};
-
-vector<point> points2 { {-1,0.5,-0.5}, {-0.5,-0.5,0}, {0.5,-0.5,0}};
+vector<point> points { 
+	{0,0.5,-0.5}, {-0.5,-0.5,0}, {0.5,-0.5,0}, 
+	{-1,-1,0}, {0,0,0}, {1,-1,0},
+};
+vector<point> normals {
+	{0,0.5,-0.5}, {-0.5,-0.5,0}, {0.5,-0.5,0},
+	{0,1,0}, {0,1,0}, {0,1,0},
+};
+//vector<point> points2 { {-1,0.5,-0.5}, {-0.5,-0.5,0}, {0.5,-0.5,0}};
 
 int width=400,height=400;
 
-GLuint vaos[2];
+GLuint vaos[1];
     GLuint program, program2;
 // OpenGL initialization
 void
 init()
 {
     // Load shaders and use the resulting shader program
-    program = InitShader( "lights_vshader.glsl", "green_fshader.glsl" );
-	program2=InitShader( "lights_vshader.glsl", "red_fshader.glsl" );
+    program = InitShader( "lights_vshader.glsl", "simple_fshader.glsl" );
     
     glUseProgram( program );
     GLuint vPosition = glGetAttribLocation( program, "vPosition" );
-
-
+    GLuint vNormal = glGetAttribLocation( program, "vNormal" );
 	
     // Create a vertex array object
-    glGenVertexArrays( 2, vaos );
+    glGenVertexArrays( 1, vaos );
     
     glBindVertexArray( vaos[0] );
     // Create and initialize a buffer object
     GLuint buffer;
     glGenBuffers( 1, &buffer );
     glBindBuffer( GL_ARRAY_BUFFER, buffer );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(point)*points.size() ,
+    glBufferData( GL_ARRAY_BUFFER, sizeof(point)*points.size() + sizeof(point)*normals.size() ,
 		  NULL, GL_STATIC_DRAW );
     glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point)*points.size(), &points[0] );
+    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point)*points.size(),sizeof(point)*normals.size(), &points[0] );
     glEnableVertexAttribArray( vPosition );
-    glVertexAttribPointer( vPosition, 2, GL_FLOAT, GL_FALSE, 0,
+    glVertexAttribPointer( vPosition, 3, GL_FLOAT, GL_FALSE, 0,
 			   BUFFER_OFFSET(0) );
-
-	cout << "vaos[0]=" << vaos[0] <<" buf=" << buffer << endl;
-    glBindVertexArray( vaos[1] );
-    glGenBuffers( 1, &buffer );
-	cout << "vaos[1]=" << vaos[1] <<" buf=" << buffer << endl;
-    glBindBuffer( GL_ARRAY_BUFFER, buffer );
-    glBufferData( GL_ARRAY_BUFFER, sizeof(point)*points2.size() ,
-		  NULL, GL_STATIC_DRAW );
-    glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof(point)*points2.size(), &points2[0] );
-    glEnableVertexAttribArray( vPosition );
-    glVertexAttribPointer( vPosition, 2, GL_FLOAT, GL_FALSE, 0,
-			   BUFFER_OFFSET(0) );
+    glEnableVertexAttribArray( vNormal );
+    glVertexAttribPointer( vNormal, 3, GL_FLOAT, GL_FALSE, 0,
+			   BUFFER_OFFSET(sizeof(point)*points.size()) );
 
 
-//    glBufferSubData( GL_ARRAY_BUFFER, sizeof(point2)*points.size(), sizeof(color3)*colors.size(), &colors[0] );
 
 
 /*
-    GLuint vColor = glGetAttribLocation( program, "vColor" ); 
-    glEnableVertexAttribArray( vColor );
-    glVertexAttribPointer( vColor, 3, GL_FLOAT, GL_FALSE, 0,
-			   BUFFER_OFFSET(sizeof(point2)*points.size()) );
 
     model = glGetUniformLocation( program, "model" );
     view = glGetUniformLocation( program, "view" );
@@ -72,16 +63,38 @@ init()
     glPointSize(5);
 }
 
+float lightColor[3]={0,0,0};
+
+
+void timerFunc(int value)
+{
+	cout << "timing " << value << endl;
+	lightColor[2]+=0.2;
+	glutPostRedisplay();
+	glutTimerFunc(1000,timerFunc, value+1);
+}
+
 void display(void)
 {
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glUseProgram(program);
-    glBindVertexArray( vaos[0] );
+    
+    GLuint vColor = glGetUniformLocation( program, "vColor" );
+	glUniform4f(vColor, 1.0, 0.5,0.0,1.0);
+
+    GLuint lColor = glGetUniformLocation( program, "lColor" );
+	glUniform4f(lColor, lightColor[0], lightColor[1],lightColor[2],1.0);
+
+	GLuint lPosition=glGetUniformLocation(program, "lPosition");
+	glUniform3f(lPosition, 1.0, 1.0,1.0);
+	
+	GLuint vNormal=glGetUniformLocation(program, "vNormal");
+	glUniform3f(vNormal, 0.0, 1.0,1.0);
+
+    glBindVertexArray( vaos[0] );	
 	glDrawArrays( GL_TRIANGLES, 0, points.size() );
 	
-	glUseProgram(program2);
-	glBindVertexArray( vaos[1] );
-	glDrawArrays( GL_TRIANGLES, 0, points2.size() );
+	
 	glutSwapBuffers();
 }
 
@@ -113,6 +126,7 @@ main( int argc, char **argv )
     glutDisplayFunc( display );
     //glutKeyboardFunc( keyboard );
     glutReshapeFunc( reshape );
+	glutTimerFunc(1000,timerFunc, 0);
 
     glutMainLoop();
     return 0;
